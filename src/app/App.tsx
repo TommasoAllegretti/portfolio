@@ -8,12 +8,12 @@ import banana from '../assets/banana.png'
 function App() {
   return (
     <Router>
-      <div>
-        <nav className="fixed top-0 w-full h-24 flex items-center justify-start flex-wrap bg-gradient-to-r from-green-700/75 to-green-500/75">
+      <div className="w-full h-full overflow-hidden">
+        <nav className="fixed top-0 w-full h-24 items-center justify-start flex-wrap bg-gradient-to-r from-green-700 to-green-500 z-50 flex">
           <div className="flex w-12 h-12 mx-8 hover:rotate-12 transition-all duration-300">
             <img src={banana} className="w-12 h-12" alt="" />
           </div>
-          <ul className="flex pr-12 pl-4">
+          <ul className="pr-12 pl-4 hidden md:flex">
             <li className="inline-block mr-10">
               <Link to="/" className="text-white hover:text-yellow-300">
                 Home
@@ -30,14 +30,19 @@ function App() {
               </Link>
             </li>
           </ul>
+          <div className="w-12 h-12 mx-8 hover:rotate-12 transition-all duration-300 flex md:hidden">
+            <img src={banana} className="w-12 h-12" alt="" />
+          </div>
         </nav>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contacts />} />
-          <Route path="/user/:userId" element={<Home />} />
-        </Routes>
+        <div className="mt-24 w-full h-full overflow-hidden">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contacts />} />
+            <Route path="/user/:userId" element={<Home />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   )
