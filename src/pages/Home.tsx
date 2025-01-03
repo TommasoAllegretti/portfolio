@@ -1,3 +1,4 @@
+import { Bug } from '../models/Bug'
 import { MouseEventHandler } from 'react'
 
 function createElement(text: string) {
@@ -11,23 +12,30 @@ function createElement(text: string) {
 }
 
 function createBug(event: MouseEventHandler<HTMLDivElement>) {
-  console.log(event)
+  // console.log(event)
+  // let elem = event.target
+  // if (elem) {
+  //   let newDiv = createElement('Bug')
+  //   newDiv.style.position = 'absolute'
+  //   elem.appendChild(newDiv)
+  // }
 
-  let elem = event.target
+  let newBug = Bug.create()
 
-  if (elem) {
-    let newDiv = createElement('Bug')
+  console.log(newBug)
 
-    elem.appendChild(newDiv)
-  }
+  window.setInterval(() => {
+    newBug?.runPath()
+  }, 1000)
 }
 
 function Home() {
   return (
-    <div className="h-[95vh] border border-solid border-neutral-400 grid grid-cols-12 divide-x divide-y overflow-auto">
-      <div id="block0" className="bg-green-600">
-        X
-      </div>
+    <div
+      id="td-grid"
+      className="h-[93vh] border border-solid border-neutral-400 grid grid-cols-12 divide-x divide-y overflow-auto"
+    >
+      <div id="start-point" className="bg-green-600"></div>
       {[...Array(82)].map((val, index) => {
         return (
           <div
@@ -35,14 +43,10 @@ function Home() {
             id={`block${index + 1}`}
             className="bg-blue-400"
             onClick={createBug}
-          >
-            {index + 1}
-          </div>
+          ></div>
         )
       })}
-      <div id="block83" className="bg-red-600">
-        X
-      </div>
+      <div id="block83" className="bg-red-600"></div>
     </div>
   )
 }
