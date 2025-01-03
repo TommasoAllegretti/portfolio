@@ -14,7 +14,7 @@ import {
 function App() {
   return (
     <Router>
-      <NavigationMenu>
+      <NavigationMenu className="h-[7vh]">
         <NavigationMenuList>
           <NavigationMenuItem>
             <Link to="/">

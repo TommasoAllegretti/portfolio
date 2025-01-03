@@ -24,6 +24,8 @@ export abstract class Entity {
   }
 
   public delete() {
+    console.log('delete', this.domElement)
     this.deletedAt = new Date()
+    this.domElement.remove()
   }
 }
