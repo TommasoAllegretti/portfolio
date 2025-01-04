@@ -21,8 +21,8 @@ export class Bug extends Entity {
     let bugElem = document.createElement('div')
 
     bugElem.style.position = 'absolute'
-    bugElem.style.width = '20px'
-    bugElem.style.height = '20px'
+    bugElem.style.width = '1vw'
+    bugElem.style.height = '1vw'
     bugElem.style.backgroundColor = 'red'
     bugElem.style.borderRadius = '50%'
     bugElem.style.transition = 'transform 0.5s linear'

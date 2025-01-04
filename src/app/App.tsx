@@ -31,6 +31,13 @@ function App() {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
+            <Link to="/open-source">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Open Source
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <Link to="/contact">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Contacts

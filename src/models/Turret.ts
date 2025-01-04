@@ -16,8 +16,8 @@ export class Turret extends Entity {
     let turretElem = document.createElement('div')
 
     turretElem.style.position = 'absolute'
-    turretElem.style.width = '20px'
-    turretElem.style.height = '20px'
+    turretElem.style.width = '1vw'
+    turretElem.style.height = '1vw'
     turretElem.style.backgroundColor = 'green'
     turretElem.style.borderRadius = '50%'
 

@@ -44,7 +44,7 @@ function createTurret(event: MouseEventHandler<HTMLDivElement>) {
 function Home() {
   return (
     <div>
-      <div className="h-[5vh] mx-12 mt-6">Credit: 1200</div>
+      <div className="h-[5vh] mx-12 mt-6">Credits: 1200</div>
       <div
         id="td-grid"
         className="border border-solid border-neutral-400 grid grid-cols-64 divide-x divide-y overflow-auto mx-12"
