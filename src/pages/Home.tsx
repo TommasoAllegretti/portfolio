@@ -24,7 +24,7 @@ function createBug(event: MouseEventHandler<HTMLDivElement>) {
 
   let newBug = Bug.create()
 
-  console.log(newBug)
+  // console.log(newBug)
 
   window.setInterval(() => {
     newBug?.runPath()
@@ -35,7 +35,7 @@ function createTurret(event: MouseEventHandler<HTMLDivElement>) {
   let elem = event.target
 
   if (elem) {
-    console.log(elem)
+    // console.log(elem)
 
     Turret.create(elem as HTMLElement)
   }

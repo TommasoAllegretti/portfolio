@@ -1,4 +1,5 @@
 import { Entity } from './Entity'
+import { pathBuilder } from './PathBuilder'
 
 export class Turret extends Entity {
   private constructor(
@@ -10,6 +11,8 @@ export class Turret extends Entity {
   }
 
   static create(blockElement: HTMLElement): Turret | null {
+    let idStr = blockElement.getAttribute('id')
+
     if (blockElement?.childNodes.length && blockElement?.childNodes.length > 0)
       return null
 
@@ -23,6 +26,18 @@ export class Turret extends Entity {
 
     blockElement?.appendChild(turretElem)
 
-    return new Turret(turretElem, 0, 0)
+    let idNum = Number(idStr?.replace('block', ''))
+
+    let blockY = Math.floor(idNum / 64)
+
+    let blockX = idNum % 64
+
+    // console.log(blockX, blockY)
+
+    // console.log(pathBuilder.limitIsTouched(blockX, blockY))
+
+    console.log(pathBuilder.checkIfLimitsPath(blockX, blockY))
+
+    return new Turret(turretElem, blockX, blockY)
   }
 }

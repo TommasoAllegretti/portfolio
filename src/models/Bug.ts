@@ -1,5 +1,6 @@
 import { GRID_ROW_SIZE, GRID_SIZE, MOVE_SPEED } from '@/lib/globals'
 import { Entity } from './Entity'
+import { checkIfBlockIsOccupied } from '@/lib/utils'
 
 export class Bug extends Entity {
   private constructor(
@@ -33,18 +34,6 @@ export class Bug extends Entity {
     return new Bug(bugElem, 0, 0)
   }
 
-  public checkIfBlockIsOccupied(x: number, y: number) {
-    if (y * GRID_ROW_SIZE + x < 0) return false
-
-    let grid = document.getElementById('td-grid')
-
-    let block = grid?.querySelector(`#block${y * GRID_ROW_SIZE + x}`)
-
-    if (block?.childNodes.length && block?.childNodes.length > 0) return true
-
-    return false
-  }
-
   public moveDomElement(
     from: { x: number; y: number },
     to: { x: number; y: number },
@@ -61,20 +50,18 @@ export class Bug extends Entity {
 
     setTimeout(() => {
       this.domElement.style.removeProperty('transform')
-      newDomBlock?.appendChild(this.domElement)
+      if (
+        this.domElement.parentElement?.attributes.getNamedItem('id')?.value ===
+        `block${GRID_SIZE - 1}`
+      )
+        this.delete()
+      else newDomBlock?.appendChild(this.domElement)
     }, MOVE_SPEED)
-
-    if (
-      this.domElement.parentElement?.attributes.getNamedItem('id')?.value ===
-      `block${GRID_SIZE - 1}`
-    ) {
-      this.delete()
-    }
   }
 
   public moveRight() {
     if (
-      this.checkIfBlockIsOccupied(this.xPos + 1, this.yPos) ||
+      checkIfBlockIsOccupied(this.xPos + 1, this.yPos) ||
       this.deletedAt !== null
     )
       return false
@@ -86,7 +73,8 @@ export class Bug extends Entity {
       (this.yPos * GRID_ROW_SIZE + this.xPos + 1) % GRID_ROW_SIZE !== 0 ||
       this.yPos * GRID_ROW_SIZE + this.xPos + 1 === GRID_SIZE - 1
     ) {
-      this.domElement.style.transform = `translate(140%, 0)`
+      if (!(this.yPos * GRID_ROW_SIZE + this.xPos + 1 >= GRID_SIZE))
+        this.domElement.style.transform = `translate(140%, 0)`
 
       this.xPos++
 
@@ -103,7 +91,7 @@ export class Bug extends Entity {
 
   public moveDown() {
     if (
-      this.checkIfBlockIsOccupied(this.xPos, this.yPos + 1) ||
+      checkIfBlockIsOccupied(this.xPos, this.yPos + 1) ||
       this.deletedAt !== null
     )
       return false
@@ -112,7 +100,8 @@ export class Bug extends Entity {
 
     // y position is not at the end of the grid
     if ((this.yPos + 1) * GRID_ROW_SIZE + this.xPos < GRID_SIZE) {
-      this.domElement.style.transform = `translate(0, 140%)`
+      if (!(this.yPos * GRID_ROW_SIZE + this.xPos + 1 >= GRID_SIZE))
+        this.domElement.style.transform = `translate(0, 140%)`
 
       this.yPos++
       this.moveDomElement(
@@ -128,7 +117,7 @@ export class Bug extends Entity {
 
   public moveLeft() {
     if (
-      this.checkIfBlockIsOccupied(this.xPos - 1, this.yPos) ||
+      checkIfBlockIsOccupied(this.xPos - 1, this.yPos) ||
       this.deletedAt !== null
     )
       return false
@@ -137,7 +126,8 @@ export class Bug extends Entity {
 
     // x position is not at the start of the grid
     if ((this.yPos * GRID_ROW_SIZE + this.xPos) % GRID_ROW_SIZE !== 0) {
-      this.domElement.style.transform = `translate(-140%, 0)`
+      if (!(this.yPos * GRID_ROW_SIZE + this.xPos + 1 >= GRID_SIZE))
+        this.domElement.style.transform = `translate(-140%, 0)`
 
       this.xPos--
       this.moveDomElement(
