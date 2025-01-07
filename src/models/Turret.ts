@@ -1,3 +1,4 @@
+import { checkIfBlockIsOccupied } from '@/lib/utils'
 import { Entity } from './Entity'
 import { pathBuilder } from './PathBuilder'
 
@@ -8,6 +9,15 @@ export class Turret extends Entity {
     yPos: number = 0,
   ) {
     super(domElement, xPos, yPos)
+
+    setInterval(() => {
+      if (
+        this.xPos - 1 >= 0 &&
+        checkIfBlockIsOccupied(this.xPos - 1, this.yPos)
+      ) {
+        console.log('hit')
+      }
+    }, 2000)
   }
 
   static create(blockElement: HTMLElement): Turret | null {
