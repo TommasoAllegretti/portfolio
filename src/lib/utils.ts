@@ -1,19 +1,22 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { GRID_ROW_SIZE } from './globals'
+import { Position } from '@/models/types'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function checkIfBlockIsOccupied(x: number, y: number) {
-  if (y * GRID_ROW_SIZE + x < 0) return false
+export function checkIfBlockIsOccupied(position: Position) {
+  if (position.y * GRID_ROW_SIZE + position.x < 0) return null
 
-  let grid = document.getElementById('td-grid')
+  let block = getCellFromPosition(position)
 
-  let block = grid?.querySelector(`#block${y * GRID_ROW_SIZE + x}`)
+  if (block?.childNodes.length && block?.childNodes.length > 0) return block.children[0].id
 
-  if (block?.childNodes.length && block?.childNodes.length > 0) return true
+  return null
+}
 
-  return false
+export function getCellFromPosition(position: Position) {
+  return document.getElementById('td-grid')?.querySelector(`#block${position.y * GRID_ROW_SIZE + position.x}`)
 }

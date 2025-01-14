@@ -14,7 +14,6 @@ function createElement(text: string) {
 }
 
 function createBug(event: MouseEventHandler<HTMLDivElement>) {
-  // console.log(event)
   // let elem = event.target
   // if (elem) {
   //   let newDiv = createElement('Bug')
@@ -23,8 +22,6 @@ function createBug(event: MouseEventHandler<HTMLDivElement>) {
   // }
 
   let newBug = Bug.create()
-
-  // console.log(newBug)
 
   window.setInterval(() => {
     newBug?.runPath()
@@ -35,8 +32,6 @@ function createTurret(event: MouseEventHandler<HTMLDivElement>) {
   let elem = event.target
 
   if (elem) {
-    // console.log(elem)
-
     Turret.create(elem as HTMLElement)
   }
 }
@@ -45,15 +40,8 @@ function Home() {
   return (
     <div>
       <div className="h-[5vh] mx-12 mt-6">Credits: 1200</div>
-      <div
-        id="td-grid"
-        className="border border-solid border-neutral-400 grid grid-cols-64 divide-x divide-y overflow-auto mx-12"
-      >
-        <div
-          id="start-point"
-          className="bg-green-600 aspect-square"
-          onClick={createBug}
-        ></div>
+      <div id="td-grid" className="border border-solid border-neutral-400 grid grid-cols-64 divide-x divide-y overflow-auto mx-12">
+        <div id="start-point" className="bg-green-600 aspect-square" onClick={createBug}></div>
         {[...Array(1406)].map((val, index) => {
           return (
             <div

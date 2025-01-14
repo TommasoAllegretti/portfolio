@@ -14,9 +14,7 @@ class PathBuilder {
   }
 
   public positionIsInsideGrid(x: number, y: number) {
-    return (
-      x >= 0 && x < GRID_ROW_SIZE && y >= 0 && y < GRID_SIZE / GRID_ROW_SIZE
-    )
+    return x >= 0 && x < GRID_ROW_SIZE && y >= 0 && y < GRID_SIZE / GRID_ROW_SIZE
   }
 
   public limitIsTouched(x: number, y: number) {
@@ -57,20 +55,7 @@ class PathBuilder {
       left: boolean
     } = { top: false, right: false, bottom: false, left: false },
   ) {
-    console.log(x, y, alreadyChecked, limitsTouched)
-
-    console.log(
-      alreadyChecked.some(
-        (elem) => JSON.stringify(elem) === JSON.stringify([x, y]),
-      ),
-    )
-
-    if (
-      !alreadyChecked.some(
-        (elem) => JSON.stringify(elem) === JSON.stringify([x, y]),
-      ) &&
-      this.positionIsInsideGrid(x, y)
-    ) {
+    if (!alreadyChecked.some((elem) => JSON.stringify(elem) === JSON.stringify([x, y])) && this.positionIsInsideGrid(x, y)) {
       alreadyChecked.push([x, y])
 
       let newLimits = this.limitIsTouched(x, y)
@@ -95,20 +80,12 @@ class PathBuilder {
 
       adjacentBlocks.forEach((block) => {
         if (
-          checkIfBlockIsOccupied(block[0], block[1]) &&
-          !alreadyChecked.some(
-            (elem) =>
-              JSON.stringify(elem) === JSON.stringify([block[0], block[1]]),
-          )
+          checkIfBlockIsOccupied({ x: block[0], y: block[1] }) !== null &&
+          !alreadyChecked.some((elem) => JSON.stringify(elem) === JSON.stringify([block[0], block[1]]))
         ) {
           alreadyChecked.push([block[0], block[1]])
 
-          let newlimitsTouchedFromAdj = this.checkIfLimitsPath(
-            block[0],
-            block[1],
-            alreadyChecked,
-            limitsTouched,
-          )
+          let newlimitsTouchedFromAdj = this.checkIfLimitsPath(block[0], block[1], alreadyChecked, limitsTouched)
 
           limitsTouched = {
             top: limitsTouched.top || newlimitsTouchedFromAdj.top,
