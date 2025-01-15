@@ -37,8 +37,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contacts />} />
-          <Route path="/user/:userId" element={<Home />} />
+          <Route path="/open-source" element={<Contacts />} />
+          <Route path="/contacts" element={<Contacts />} />
         </Routes>
       </div>
     </Router>

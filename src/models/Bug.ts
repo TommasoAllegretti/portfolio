@@ -5,9 +5,16 @@ import { Position } from './types'
 
 export class Bug extends Entity {
   public health: number
+  public rightBlocked: boolean
+  public runPathInterval: number | null
   private constructor(domElement: HTMLElement, xPos: number = 0, yPos: number = 0) {
     super(domElement, xPos, yPos)
     this.health = 100
+    this.rightBlocked = false
+
+    this.runPathInterval = window.setInterval(() => {
+      this.runPath()
+    }, MOVE_SPEED + 50)
   }
 
   static create(): Bug | null {
@@ -21,7 +28,7 @@ export class Bug extends Entity {
     bugElem.style.width = '1vw'
     bugElem.style.height = '1vw'
     bugElem.style.backgroundColor = 'red'
-    bugElem.style.borderRadius = '50%'
+    // bugElem.style.borderRadius = '50%'
     bugElem.style.transition = 'transform 0.5s linear'
     bugElem.style.zIndex = '100'
 
@@ -30,10 +37,13 @@ export class Bug extends Entity {
     return new Bug(bugElem, 0, 0)
   }
 
+  public delete() {
+    super.delete()
+    clearInterval(this.runPathInterval as number)
+  }
+
   public moveDomElement(from: Position, to: Position) {
     let newDomBlock = getCellFromPosition(to)
-
-    // this.domElement.style.translate = `100%`
 
     setTimeout(() => {
       this.domElement.style.removeProperty('transform')

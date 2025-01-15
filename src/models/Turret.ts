@@ -44,13 +44,11 @@ export class Turret extends Entity {
     let target = adjacentBlocks.find((pos) => pos !== null && checkIfBlockIsOccupied(pos) !== null)
 
     if (this.shotReady && this.xPos - 1 >= 0 && target) {
-      console.log(target)
       this.shoot(target)
     }
   }
 
   public shoot(target: Position) {
-    console.log('shoot')
     this.shotReady = false
     this.shootDOM(target)
 
@@ -67,15 +65,18 @@ export class Turret extends Entity {
     bullet.style.height = '0.5vw'
     bullet.style.backgroundColor = 'white'
     bullet.style.borderRadius = '50%'
-    bullet.style.transition = 'transform 0.1s linear'
+    bullet.style.transition = 'transform 0.05s linear'
 
     this.domElement.appendChild(bullet)
 
+    const xTransform = (target.x - this.xPos) * 350
+    const yTransform = (target.y - this.yPos) * 350
+
     setTimeout(() => {
-      bullet.style.transform = `translate(350%, 0)`
+      bullet.style.transform = `translate(${xTransform}%, ${yTransform}%)`
       setTimeout(() => {
         bullet.remove()
-      }, 1000)
-    }, 100)
+      }, 100)
+    }, 50)
   }
 }
