@@ -3,13 +3,7 @@ import './App.css'
 import Home from '../pages/Home'
 import About from '../pages/About'
 import Contacts from '../pages/Contacts'
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu'
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
 
 function App() {
   return (
@@ -17,31 +11,23 @@ function App() {
       <NavigationMenu className="h-[7vh]">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <Link to="/">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Home
-              </NavigationMenuLink>
+            <Link className={navigationMenuTriggerStyle()} to="/">
+              Home
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/about">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                About
-              </NavigationMenuLink>
+            <Link className={navigationMenuTriggerStyle()} to="/about">
+              About
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/open-source">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Open Source
-              </NavigationMenuLink>
+            <Link className={navigationMenuTriggerStyle()} to="/open-source">
+              Open Source
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/contact">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Contacts
-              </NavigationMenuLink>
+            <Link className={navigationMenuTriggerStyle()} to="/contacts">
+              Contacts
             </Link>
           </NavigationMenuItem>
         </NavigationMenuList>
