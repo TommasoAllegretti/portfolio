@@ -6,7 +6,7 @@ export class Turret extends Entity {
   public shotReady: boolean
   public shotCooldown: number
   private constructor(domElement: HTMLElement, xPos: number = 0, yPos: number = 0, shotCooldown: number = 1000) {
-    super(domElement, xPos, yPos)
+    super(Turret.generateId(), domElement, xPos, yPos)
 
     this.shotReady = true
     this.shotCooldown = shotCooldown
@@ -38,19 +38,42 @@ export class Turret extends Entity {
     return new Turret(turretElem, blockX, blockY)
   }
 
+  static generateId() {
+    return 'Turret' + Math.random().toString(36).substr(2, 9)
+  }
+
   public checkAdjacentBlocks() {
     let adjacentBlocks = [this.topLeft, this.top, this.topRight, this.left, this.right, this.bottomLeft, this.bottom, this.bottomRight]
 
-    let target = adjacentBlocks.find((pos) => pos !== null && checkIfBlockIsOccupied(pos) !== null)
+    let targetId = null
+    let targetPosition = null
 
-    if (this.shotReady && this.xPos - 1 >= 0 && target) {
-      this.shoot(target)
+    adjacentBlocks.forEach((pos) => {
+      if (
+        pos !== null &&
+        checkIfBlockIsOccupied(pos) !== null &&
+        checkIfBlockIsOccupied(pos)?.includes('Bug') &&
+        Number(document.getElementById(checkIfBlockIsOccupied(pos)!)!.style.opacity) > 0
+      ) {
+        targetId = checkIfBlockIsOccupied(pos)
+        targetPosition = pos
+      }
+    })
+
+    if (this.shotReady && this.xPos - 1 >= 0 && targetId !== null) {
+      this.shoot(targetId, targetPosition!)
     }
   }
 
-  public shoot(target: Position) {
+  public shoot(targetId: string, targetPosition: Position) {
     this.shotReady = false
-    this.shootDOM(target)
+    this.shootDOM(targetPosition)
+
+    const targetElement: HTMLElement = document.getElementById('td-grid')!.querySelector(`#${targetId}`)!
+
+    let targetOpacity = Number(targetElement?.style.opacity)
+
+    targetElement.style.opacity = `${targetOpacity - 0.1}`
 
     setTimeout(() => {
       this.shotReady = true

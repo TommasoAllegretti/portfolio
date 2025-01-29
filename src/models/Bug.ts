@@ -8,7 +8,7 @@ export class Bug extends Entity {
   public rightBlocked: boolean
   public runPathInterval: number | null
   private constructor(domElement: HTMLElement, xPos: number = 0, yPos: number = 0) {
-    super(domElement, xPos, yPos)
+    super(Bug.generateId(), domElement, xPos, yPos)
     this.health = 100
     this.rightBlocked = false
 
@@ -31,10 +31,15 @@ export class Bug extends Entity {
     // bugElem.style.borderRadius = '50%'
     bugElem.style.transition = 'transform 0.5s linear'
     bugElem.style.zIndex = '100'
+    bugElem.style.opacity = '1'
 
     startPoint?.appendChild(bugElem)
 
     return new Bug(bugElem, 0, 0)
+  }
+
+  static generateId() {
+    return 'Bug' + Math.random().toString(36).substr(2, 9)
   }
 
   public delete() {
