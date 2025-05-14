@@ -1,0 +1,83 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Nav from "@/components/nav.astro";
+import Home from "@/components/home.astro";
+import Projects from "@/components/projects.astro";
+import Contact from "@/components/contact.astro";
+import Footer from "@/components/footer.astro";
+---
+
+<Layout title="Tommaso Allegretti">
+  --- ---
+
+  <section class="text-[var(--white)] mt-12 md:mt-0" id="privacy">
+    <div class="max-w-5xl mx-auto space-y-8 md:py-36 pb-14">
+      <div class="text-left space-y-4">
+        <p class="text-md md:text-lg text-[var(--white-icon)] shiny-white">
+          Privacy Policy
+        </p>
+        <div class="flex flex-col space-y-4 md:gap-4">
+          <h1
+            class="text-[var(--white)] text-5xl md:text-6xl font-medium text-pretty leading-none"
+          >
+            Your Privacy Matters
+          </h1>
+          <p class="text-md md:text-2xl text-[var(--white-icon)]">
+            We are committed to protecting your privacy and ensuring that your
+            personal data is handled in accordance with the General Data
+            Protection Regulation (GDPR).
+          </p><p class="text-md md:text-2xl text-[var(--white-icon)]">
+            When you submit information through the contact form on this
+            website—such as your name, email address, and message—it is used
+            solely to respond to your inquiry.
+          </p><p class="text-md md:text-2xl text-[var(--white-icon)]">
+            We do not use your data for marketing purposes, and we do not share
+            it with third parties.
+          </p><p class="text-md md:text-2xl text-[var(--white-icon)]">
+            Your personal information is stored securely and only for the time
+            necessary to process and respond to your request. After that, it is
+            deleted unless further communication is required or legally
+            necessary.
+          </p><p class="text-md md:text-2xl text-[var(--white-icon)]">
+            You have the right to request access to, correction of, or deletion
+            of your personal data at any time. To exercise your rights under
+            GDPR or if you have any questions about how your data is handled,
+            please contact us at <a
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=allegretti.tommaso@gmail.com&su=Hey%20Tom!"
+              class="text-[var(--sec)] hover:underline"
+              >allegretti.tommaso@gmail.com</a
+            >.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <style is:global>
+    .shiny-sec {
+      background: linear-gradient(
+        135deg,
+        #a476ff 25%,
+        #eee5ff 50%,
+        #a476ff 75%
+      );
+      background-size: 400% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shine 3s linear infinite;
+    }
+
+    @keyframes shine {
+      0% {
+        background-position: 100% 50%;
+      }
+      30%,
+      70% {
+        background-position: 0% 50%;
+      }
+    }
+  </style>
+
+  <Footer />
+</Layout>

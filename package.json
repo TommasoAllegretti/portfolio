@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "portfolio",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
@@ -15,9 +15,8 @@
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
     "astro": "^5.7.13",
-    "firebase": "^11.7.1",
     "ogl": "^1.0.11",
-    "ract": "^0.0.1",
+    "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sharp": "^0.34.1",
     "typescript": "^5.8.3"
