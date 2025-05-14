@@ -38,8 +38,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download dist artifact
-        uses: actions/download-artifact@v3
+      - name: Download artifact
+        uses: actions/download-artifact@main
         with:
           name: dist
           path: dist
