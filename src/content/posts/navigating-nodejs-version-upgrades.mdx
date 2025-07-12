@@ -1,0 +1,109 @@
+---
+title: Navigating Node.js Version Upgrades
+description: Overcome Compatibility Issues and Modernize Your Project with Confidence
+tags: [node, webpack, technical debt]
+cowritten: false
+date: July 12, 2025
+---
+
+
+Upgrading a Node.js project can feel daunting. From deprecated dependencies to retrocompatibility issues and cryptic OpenSSL error messages, moving from an outdated version to the latest release can introduce a host of problems.  
+
+Today, we'll explore some of the most common challenges developers face when updating their Node.js applications — and how to overcome them.
+
+---
+
+## OpenSSL conflicts
+
+A common pain point occurs when trying to upgrade Node.js to version 17 or higher in projects that use Webpack versions earlier than 5.
+
+In Node.js 17, OpenSSL 3.0 replaced the older OpenSSL 1.1.1, which introduced compatibility issues — especially with Webpack's default hashing algorithms in versions below 5.61.0.
+
+This often results in the following frustrating error message:
+
+```bash
+Error: error:0308010C:digital envelope routines::unsupported
+```
+
+If you've seen this before, you know how tricky it can be to troubleshoot.
+
+### Solutions
+
+Here are your main options for resolving this issue:
+
+- **Use the `openssl-legacy-provider` Flag (Not Recommended)**  
+   As a temporary workaround, you can enable OpenSSL legacy support. However, this method is deprecated and **will be removed in future Node versions**, so it's not a long-term solution.
+   
+   In your package.json:
+
+      ```json
+      "scripts": {
+         "build": "NODE_OPTIONS=--openssl-legacy-provider webpack"
+      }
+      ```
+
+- **Downgrade to Node v16 (Not Recommended)**  
+   If updating Webpack isn't feasible and you want stability, reverting to **Node.js v16** avoids the OpenSSL 3.0 issue altogether - but at the cost of staying on an older Node version.
+
+- **Upgrade Webpack (Recommended)**  
+   Update Webpack to v5.61.0 or later, where the default hashing algorithm was changed from `md4` to `sha256`, which is fully supported by OpenSSL 3.0.
+
+---
+
+## Obsolete dependencies
+
+Upgrading Node.js often uncovers issues with **outdated** or **deprecated dependencies**—especially plugins tied to specific versions of tools like Webpack.
+
+Some packages may break or become incompatible, forcing you to find modern replacements that offer similar functionality. Sometimes it's a smooth swap with little code change; other times, especially with unmaintained libraries or custom solutions, it can require deeper **refactoring** to support new APIs or behaviors.
+
+### Solutions
+
+- **Manually update each dependency (Slow)**
+
+- **Helpful tools**  
+
+   One tool that proved invaluable for me is [npm-check-updates](https://www.npmjs.com/package/npm-check-updates). It scans your `package.json` and detects outdated or deprecated libraries, allowing you to upgrade them easily.
+
+   You can install it with
+
+   ```bash
+   npm install npm-check-updates
+   ```
+
+   A particularly useful command is
+
+   ```bash
+   ncu --interactive --format group
+   ```
+
+   <img className='mx-auto mb-4 border border-solid rounded' alt="npm-check" src="https://user-images.githubusercontent.com/750276/175336533-539261e4-5cf1-458f-9fbb-a7be2b477ebb.png"></img>
+
+   This displays all available updates, grouped by **major**, **minor**, and **patch** changes - making it easier to assess the impact of each update before proceeding.
+
+---
+
+## Performance Enhancing
+
+After upgrading your project's Node version and updating all dependencies to compatible versions, you may reach a point where your project builds correctly and doesn't produce any errors during the build phase or while running in the browser.
+
+This is a great milestone—but there's still room for improvement.
+
+- **Remove any unused dependencies**
+
+  There are several tools that can help detect unused dependencies in your project. The most effective ones are [depcheck](https://www.npmjs.com/package/depcheck) and [npm-check](https://www.npmjs.com/package/npm-check).
+
+   <img className='mx-auto mb-4 border border-solid rounded' alt="npm-check" src="https://cloud.githubusercontent.com/assets/51505/9569919/99c2412a-4f48-11e5-8c65-e9b6530ee991.png"></img>
+
+  These tools analyze your codebase to find references to the dependencies listed in your `package.json`. However, be cautious—some dependencies (like build tools or plugins) are not meant to be directly referenced in your code and may be falsely flagged as unused.
+
+- **Explore new possibilities**
+
+  Updating your bundler, linter, or other core tools can unlock powerful new features that you might not be aware of.
+
+  For example, when migrating from Webpack 4 to 5, I discovered a whole set of new loaders available to transpile my code, and switching from `babel-loader` to `esbuild-loader` reduced my compile time from 35 seconds to about 8 seconds.
+
+- **Convert Your CommonJS Project to ESM**
+
+   Migrating from CommonJS (CJS) to ECMAScript Modules (ESM) is a complex topic worthy of its own series of articles, but in some cases, the transition can be completed in just a few steps. Making this switch enables you to use modern dependencies that are now ESM-only.
+
+  If you dont do this sooner or later you will fall behind with the newest releases and will incur in many weak points and possible vulnerabilities in your codebase.
