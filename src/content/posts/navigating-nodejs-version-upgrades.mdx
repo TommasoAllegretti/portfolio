@@ -1,5 +1,5 @@
 ---
-title: Navigating Node.js Version Upgrades
+title: Navigating Node.js Upgrades In Your Frontend Project
 description: Overcome Compatibility Issues and Modernize Your Project with Confidence
 tags: [node, webpack, technical debt]
 cowritten: false
@@ -7,35 +7,32 @@ date: July 12, 2025
 ---
 
 
-Upgrading a Node.js project can feel daunting. From deprecated dependencies to retrocompatibility issues and cryptic OpenSSL error messages, moving from an outdated version to the latest release can introduce a host of problems.  
+Upgrading a Node.js project is often daunting. From deprecated dependencies to compatibility snags and cryptic OpenSSL errors, jumping from an old version to the newest release can trigger a surprising array of headaches. 
 
-Today, we'll explore some of the most common challenges developers face when updating their Node.js applications — and how to overcome them.
+Here's a practical guide to the most common issues developers face when upgrading Node.js applications—and how to resolve them with confidence.
 
 ---
 
-## OpenSSL conflicts
+## OpenSSL Conflicts and Webpack
 
-A common pain point occurs when trying to upgrade Node.js to version 17 or higher in projects that use Webpack versions earlier than 5.
+A frequent breaking point arises when upgrading Node.js to version 17 or later, especially if using Webpack below v5.61.0. 
 
-In Node.js 17, OpenSSL 3.0 replaced the older OpenSSL 1.1.1, which introduced compatibility issues — especially with Webpack's default hashing algorithms in versions below 5.61.0.
+Starting with Node 17, OpenSSL 3.x replaced the older 1.1.1 version, tightening cryptographic standards and breaking some hashing mechanisms in older Webpack versions. 
 
-This often results in the following frustrating error message:
+This typically leads to:
 
 ```bash
 Error: error:0308010C:digital envelope routines::unsupported
 ```
 
-If you've seen this before, you know how tricky it can be to troubleshoot.
-
 ### Solutions
 
-Here are your main options for resolving this issue:
+- **Upgrade Webpack (Recommended)**  
+   Update to Webpack v5.61.0 or above. This switch ensures the default hashing algorithm changes from `md4` to `sha256`, fully supported by OpenSSL 3.
 
-- **Use the `openssl-legacy-provider` Flag (Not Recommended)**  
-   As a temporary workaround, you can enable OpenSSL legacy support. However, this method is deprecated and **will be removed in future Node versions**, so it's not a long-term solution.
+- **Use the `openssl-legacy-provider` Flag (Temporary)**  
+   As a quick fix, add `NODE_OPTIONS=--openssl-legacy-provider` to your build/start scripts to restore legacy cryptographic support, but note this method is **deprecated** and will eventually disappear in future Node releases.
    
-   In your package.json:
-
       ```json
       "scripts": {
          "build": "NODE_OPTIONS=--openssl-legacy-provider webpack"
@@ -43,67 +40,64 @@ Here are your main options for resolving this issue:
       ```
 
 - **Downgrade to Node v16 (Not Recommended)**  
-   If updating Webpack isn't feasible and you want stability, reverting to **Node.js v16** avoids the OpenSSL 3.0 issue altogether - but at the cost of staying on an older Node version.
-
-- **Upgrade Webpack (Recommended)**  
-   Update Webpack to v5.61.0 or later, where the default hashing algorithm was changed from `md4` to `sha256`, which is fully supported by OpenSSL 3.0.
+   If updating dependencies isn't possible, using **Node v16** sidesteps the OpenSSL 3 issue. However, Node 16 is now end-of-life and exposes you to unpatched vulnerabilities, so this is a last resort.
 
 ---
 
-## Obsolete dependencies
+## Obsolete Dependencies and Security Vulnerabilities
 
-Upgrading Node.js often uncovers issues with **outdated** or **deprecated dependencies**—especially plugins tied to specific versions of tools like Webpack.
+Node upgrades often expose outdated or deprecated dependencies—many plugins break or are no longer maintained, especially when tied to past Webpack or build system versions. 
 
-Some packages may break or become incompatible, forcing you to find modern replacements that offer similar functionality. Sometimes it's a smooth swap with little code change; other times, especially with unmaintained libraries or custom solutions, it can require deeper **refactoring** to support new APIs or behaviors.
+Beyond just breaking builds, running Node versions prior to v18 exposes projects to unpatched critical vulnerabilities, with recent CVEs like CVE-2025-23087 explicitly targeting legacy versions.
 
 ### Solutions
 
-- **Manually update each dependency (Slow)**
+- **Systematically Update Dependencies**  
 
-- **Helpful tools**  
-
-   One tool that proved invaluable for me is [npm-check-updates](https://www.npmjs.com/package/npm-check-updates). It scans your `package.json` and detects outdated or deprecated libraries, allowing you to upgrade them easily.
-
-   You can install it with
+   Use [npm-check-updates](https://www.npmjs.com/package/npm-check-updates) to quickly surface outdated packages and interactively upgrade them, grouped by major, minor, and patch changes.
 
    ```bash
-   npm install npm-check-updates
-   ```
-
-   A particularly useful command is
-
-   ```bash
+   npm install -g npm-check-updates
    ncu --interactive --format group
    ```
 
    <img className='mx-auto mb-4 border border-solid rounded' alt="npm-check" src="https://user-images.githubusercontent.com/750276/175336533-539261e4-5cf1-458f-9fbb-a7be2b477ebb.png"></img>
 
-   This displays all available updates, grouped by **major**, **minor**, and **patch** changes - making it easier to assess the impact of each update before proceeding.
+- **Scan for Security Issues**
+
+   Regularly audit your dependencies with `npm audit` and keep watch for CVEs affecting Node runtime versions still in use.
+   
+- **Refactor or Replace Deprecated Packages**
+
+   Some packages may require full replacement or significant code changes, especially if original maintainers have archived them or if APIs have shifted.
 
 ---
 
-## Performance Enhancing
+## Removing Unused Dependencies
 
-After upgrading your project's Node version and updating all dependencies to compatible versions, you may reach a point where your project builds correctly and doesn't produce any errors during the build phase or while running in the browser.
+After upgrading, it's vital to clean out unused dependencies to minimize your attack surface and speed up installs. 
 
-This is a great milestone—but there's still room for improvement.
+Tools such as [depcheck](https://www.npmjs.com/package/depcheck) and [npm-check](https://www.npmjs.com/package/npm-check) analyze your codebase for unused packages, but treat build-only or devDependencies flagged as unused with caution.
 
-- **Remove any unused dependencies**
+---
 
-  There are several tools that can help detect unused dependencies in your project. The most effective ones are [depcheck](https://www.npmjs.com/package/depcheck) and [npm-check](https://www.npmjs.com/package/npm-check).
+## Unlocking New Features
 
-   <img className='mx-auto mb-4 border border-solid rounded' alt="npm-check" src="https://cloud.githubusercontent.com/assets/51505/9569919/99c2412a-4f48-11e5-8c65-e9b6530ee991.png"></img>
+Modernizing your toolchain doesn't just fix errors—upgraded versions often open up major performance and DX improvements. 
 
-  These tools analyze your codebase to find references to the dependencies listed in your `package.json`. However, be cautious—some dependencies (like build tools or plugins) are not meant to be directly referenced in your code and may be falsely flagged as unused.
+For instance, moving from `babel-loader` to `esbuild-loader` in Webpack 5 delivers drastically faster builds thanks to native ESM and lower-level optimization.
 
-- **Explore new possibilities**
+---
 
-  Updating your bundler, linter, or other core tools can unlock powerful new features that you might not be aware of.
+## Converting CommonJS to ESM
 
-  For example, when migrating from Webpack 4 to 5, I discovered a whole set of new loaders available to transpile my code, and switching from `babel-loader` to `esbuild-loader` reduced my compile time from 35 seconds to about 8 seconds.
+Migrating from **CommonJS (CJS)** to **ECMAScript Modules (ESM)** is rapidly becoming essential, as more modern packages are published ESM-only.
 
-- **Convert Your CommonJS Project to ESM**
+- Benefits:
 
-   Migrating from CommonJS (CJS) to ECMAScript Modules (ESM) is a complex topic worthy of its own series of articles, but in some cases, the transition can be completed in just a few steps. Making this switch enables you to use modern dependencies that are now ESM-only.
+   ESM brings better performance, aligns with browser standards, and encourages cleaner dependency management.
 
-  If you dont do this sooner or later you will fall behind with the newest releases and will incur in many weak points and possible vulnerabilities in your codebase.
+- Migration Process:
+   - Add `"type": "module"` to **package.json** to enable ESM mode.
+   - Convert `require/module.exports` to `import/export`.
+   - Address differences like the lack of `__dirname` in ESM (use shims like `import.meta.url` or `fileURLToPath`).

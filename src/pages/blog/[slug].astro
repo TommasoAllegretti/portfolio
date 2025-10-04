@@ -13,7 +13,8 @@ export const getStaticPaths = async () => {
 };
 
 const posts = (await getCollection("posts")).sort(
-  (a, z) => +new Date(z.data.date) - +new Date(a.data.date)
+  (a: CollectionEntry<"posts">, z: CollectionEntry<"posts">) =>
+    +new Date(z.data.date) - +new Date(a.data.date)
 );
 const post = Astro.props as CollectionEntry<"posts">;
 const tags = [...new Set(post.data.tags)].sort();
@@ -25,47 +26,151 @@ const next = posts?.[index - 1];
 ---
 
 <Layout title={`${post.data.title} | Tommaso Allegretti`}>
-  <div class="max-w-5xl mx-auto py-12 text-[var(--white)]">
-    <H1>{post.data.title}</H1>
-    <p class="text-[var(--white)]">{post.data.description}</p>
-
-    <div class="mt-5 text-sm text-[var(--white)]">
-      <span class="opacity-70">{post.data.date}</span>
+  <article class="max-w-4xl mx-auto py-8 text-[var(--white)]">
+    <!-- Go Back Button -->
+    <div class="mb-8">
+      <Link
+        href="/"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--white-icon-tr)] hover:bg-[var(--white-icon)] transition-all duration-200 text-[var(--white)] hover:text-[var(--background)] font-medium text-sm border-0"
+      >
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m12 19-7-7 7-7"></path>
+          <path d="M19 12H5"></path>
+        </svg>
+        Back to Home
+      </Link>
     </div>
 
-    <hr class="h-16 border-0" />
+    <!-- Article Header -->
+    <header class="mb-12">
+      <H1 className="mb-4 text-5xl leading-tight">{post.data.title}</H1>
+      <p class="text-xl text-[var(--white)] opacity-90 leading-relaxed mb-6">
+        {post.data.description}
+      </p>
 
-    <Content components={MDXComponents} />
+      <!-- Meta Information -->
+      <div class="flex flex-wrap items-center gap-4 text-sm">
+        <time class="flex items-center gap-2 text-[var(--white)] opacity-70">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          {post.data.date}
+        </time>
 
-    <hr class="h-4 border-0" />
-
-    <section class="my-8 text-sm">
-      <div class="my-4 flex gap-8 text-sm">
         {
-          prev ? (
-            <Link
-              className="mr-auto flex w-1/2 truncate rounded-sm py-2 text-left font-medium"
-              href={`/blog/${prev.slug}`}
-            >
-              <span class="mr-2">←</span>
-              <span class="flex-1 truncate">{prev.data.title}</span>
-            </Link>
-          ) : null
-        }
-
-        {
-          next ? (
-            <Link
-              className="ml-auto flex w-1/2 truncate rounded-sm py-2 text-right font-medium"
-              href={`/blog/${next.slug}`}
-            >
-              <span class="flex-1 truncate">{next.data.title}</span>
-              <span class="ml-2">→</span>
-            </Link>
-          ) : null
+          tags.length > 0 && (
+            <div class="flex items-center gap-2">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                class="opacity-70"
+              >
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                <line x1="7" y1="7" x2="7.01" y2="7" />
+              </svg>
+              <div class="flex flex-wrap gap-2">
+                {tags.map((tag: string) => (
+                  <span class="px-2 py-1 text-xs rounded-full bg-[var(--sec)] bg-opacity-20 text-[var(--white)] border border-[var(--sec)] border-opacity-30">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )
         }
       </div>
-    </section>
+    </header>
+
+    <!-- Article Content -->
+    <div class="prose prose-invert max-w-none">
+      <Content components={MDXComponents} />
+    </div>
+
+    <!-- Navigation Section -->
+    <nav class="mt-16 pt-8 border-t border-[var(--white-icon-tr)]">
+      <div class="flex flex-col sm:flex-row gap-4 text-sm">
+        {
+          prev && (
+            <Link
+              className="flex-1 group p-4 rounded-lg bg-[var(--white-icon-tr)] hover:bg-[var(--white-icon)] transition-all duration-200 border-0"
+              href={`/blog/${prev.slug}`}
+            >
+              <div class="flex items-center gap-3">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="flex-shrink-0 group-hover:translate-x-[-2px] transition-transform"
+                >
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+                <div class="text-left">
+                  <div class="text-xs opacity-70 mb-1">Previous Post</div>
+                  <div class="font-medium text-[var(--white)] group-hover:text-[var(--background)] transition-colors">
+                    {prev.data.title}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )
+        }
+
+        {
+          next && (
+            <Link
+              className="flex-1 group p-4 rounded-lg bg-[var(--white-icon-tr)] hover:bg-[var(--white-icon)] transition-all duration-200 border-0"
+              href={`/blog/${next.slug}`}
+            >
+              <div class="flex items-center gap-3">
+                <div class="text-right flex-1">
+                  <div class="text-xs opacity-70 mb-1">Next Post</div>
+                  <div class="font-medium text-[var(--white)] group-hover:text-[var(--background)] transition-colors">
+                    {next.data.title}
+                  </div>
+                </div>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="flex-shrink-0 group-hover:translate-x-[2px] transition-transform"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </div>
+            </Link>
+          )
+        }
+      </div>
+    </nav>
 
     <script is:inline>
       document.querySelectorAll(".copy-code").forEach((button) => {
@@ -81,5 +186,5 @@ const next = posts?.[index - 1];
         );
       });
     </script>
-  </div>
+  </article>
 </Layout>
